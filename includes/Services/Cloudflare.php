@@ -46,7 +46,9 @@ class Cloudflare implements PurgeServiceInterface {
 
 		$requests = [];
 
-		foreach ( array_chunk( $urls, 30 ) as $chunk ) {
+		$chunkSize = $this->extensionConfig->get( 'MultiPurgeCloudFlareCacheByDeviceType' ) ? 15 : 30;
+		
+		foreach ( array_chunk( $urls, $chunkSize ) as $chunk ) {
 			try {
 				$requests[] = $this->makeRequest( $chunk );
 			} catch ( JsonException $e ) {
